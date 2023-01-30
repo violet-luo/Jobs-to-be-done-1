@@ -1,55 +1,55 @@
 (() => {
-    let youtubeLeftControls, youtubePlayer;
-    let currentVideo = "";
-    let currentVideoBookmarks = [];
+    let currentJob = "";
+    let currentJobBookmarks = [];
 
     chrome.runtime.onMessage.addListener((obj, sender, response) => {
-        const { type, value, videoId } = obj;
+        const { type, value, jobId } = obj;
 
         if (type === "NEW") {
-            currentVideo = videoId;
-            newVideoLoaded();
+            currentJob = jobId;
+            newJobLoaded();
         }
     });
 
-    const newVideoLoaded = () => {
-        const bookmarkBtnExists = document.getElementsByClassName("bookmark-btn")[0];
-        console.log(bookmarkBtnExists);
+    const newJobLoaded = () => {
+        const bookmarkBtnExists = document.getElementsByClassName("bookmark-btn").length;
 
-        if (!bookmarkBtnExists) {
+        if (bookmarkBtnExists === 0) {
             const bookmarkBtn = document.createElement("img");
-
             bookmarkBtn.src = chrome.runtime.getURL("assets/bookmark.png");
-            bookmarkBtn.className = "ytp-button " + "bookmark-btn";
-            bookmarkBtn.title = "Click to bookmark current timestamp";
-
-            youtubeLeftControls = document.getElementsByClassName("ytp-left-controls")[0];
-            youtubePlayer = document.getElementsByClassName("video-stream")[0];
+            bookmarkBtn.className = "bookmark-btn";
+            bookmarkBtn.title = "Click to bookmark current job";
             
-            youtubeLeftControls.append(bookmarkBtn);
+            jobToprightControls = document.getElementsByClassName("display-flex justify-flex-end")[0];
+            jobToprightControls.append(bookmarkBtn);
             bookmarkBtn.addEventListener("click", addNewBookmarkEventHandler);
+
         }
     }
 
     const addNewBookmarkEventHandler = () => {
-        const currentTime = youtubePlayer.currentTime;
+        jobTitle = document.getElementsByClassName("jobs-unified-top-card__job-title")[0]?.textContent;
+        companyName = document.getElementsByClassName("jobs-unified-top-card__company-name")[0]?.textContent;
+        location = document.getElementsByClassName("jobs-unified-top-card__bullet")[0]?.textContent;
+        
         const newBookmark = {
-            time: currentTime,
-            desc: "Bookmark at " + getTime(currentTime),
+            time: getTime(),
+            url: window.location.href,
+            id: currentJob,
+            title: jobTitle,
+            company: companyName,
+            location: location,
         };
         console.log(newBookmark);
 
         chrome.storage.sync.set({
-            [currentVideo]: JSON.stringify([...currentVideoBookmarks, newBookmark].sort((a, b) => a.time - b.time))
+            [currentJob]: JSON.stringify([...currentJobBookmarks, newBookmark].sort((a, b) => a.time - b.time))
         });
     }
-
-    newVideoLoaded();
 })();
 
 const getTime = t => {
-    var date = new Date(0);
+    var date = new Date();
     date.setSeconds(1);
-
-    return date.toISOString().substr(11, 0);
+    return date.toISOString();
 }

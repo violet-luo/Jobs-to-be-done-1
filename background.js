@@ -1,12 +1,12 @@
 chrome.tabs.onUpdated.addListener((tabId, tab) => {
-    if (tab.url && tab.url.includes("youtube.com/watch")) {
-      const queryParameters = tab.url.split("?")[1];
-      const urlParameters = new URLSearchParams(queryParameters);
-  
+    if (tab.url && tab.url.includes("linkedin.com/jobs/view/")) {
+      const queryParameters = tab.url.split("/")[5];
+      console.log(queryParameters);
       chrome.tabs.sendMessage(tabId, {
         type: "NEW",
-        videoId: urlParameters.get("v"),
+        jobId: queryParameters,
       });
     }
+    //tab.url.includes("collections")?tab.url.split("=")[1]
   });
   

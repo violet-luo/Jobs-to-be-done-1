@@ -1,15 +1,15 @@
 {
-    "name": "My YT Bookmarks",
+    "name": "Jobs-to-be-done",
     "version": "0.1.0",
-    "description": "Saving timestamps in YT videos",
+    "description": "Saving job applications in linkedin",
     "permissions": ["storage", "tabs"],
-    "host_permissions": ["https://*.youtube.com/*"],
+    "host_permissions": ["https://*.linkedin.com/jobs/view/*"],
     "background": {
       "service_worker": "background.js"
     },
     "content_scripts": [
       {
-        "matches": ["https://*.youtube.com/*"],
+        "matches": ["https://*.linkedin.com/jobs/view/*"],
         "js": ["contentScript.js"]
       }
     ],
@@ -21,7 +21,7 @@
           "assets/delete.png",
           "assets/save.png"
         ],
-        "matches": ["https://*.youtube.com/*"]
+        "matches": ["http://*/*", "https://*/*"]
       }
     ],
     "action": {
@@ -30,7 +30,7 @@
         "24": "assets/ext-icon.png",
         "32": "assets/ext-icon.png"
       },
-      "default_title": "My YT Bookmarks",
+      "default_title": "Jobs-to-be-done",
       "default_popup": "popup.html"
     },
     "manifest_version": 3
