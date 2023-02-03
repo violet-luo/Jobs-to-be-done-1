@@ -2,6 +2,9 @@
     "name": "Jobs-to-be-done",
     "version": "0.1.0",
     "description": "Saving job applications in linkedin",
+    "content_security_policy": {
+      "extension_pages": "default-src 'self'"
+    },
     "permissions": ["storage", "tabs"],
     "host_permissions": ["https://*.linkedin.com/jobs/view/*"],
     "background": {
@@ -32,6 +35,9 @@
       },
       "default_title": "Jobs-to-be-done",
       "default_popup": "popup.html"
+    },
+    "externally_connectable": {
+      "matches": ["*://*.linkedin.com/*"]
     },
     "manifest_version": 3
 }
