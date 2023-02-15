@@ -1,4 +1,5 @@
 (() => {
+    let jobToprightControls;
     let currentJob = "";
     let currentJobBookmarks = [];
 
@@ -7,6 +8,7 @@
 
         if (type === "NEW") {
             currentJob = jobId;
+            console.log(currentJob);
             newJobLoaded();
         } else if (type === "DELETE") {
             currentJobBookmarks = currentJobBookmarks.filter((bookmark) => bookmark.id !== value);
@@ -14,6 +16,8 @@
 
             response(currentJobBookmarks);
         }
+
+        //newJobLoaded();
     });
 
     const fetchBookmarks = () => {
@@ -25,28 +29,22 @@
     }
 
     const newJobLoaded = async () => {
+        console.log("new job loaded")
         const bookmarkBtnExists = document.getElementById("bookmark-btn");
         console.log(bookmarkBtnExists);
         currentJobBookmarks = await fetchBookmarks();
-        //console.log(bookmarkBtnExists);
+        console.log(currentJobBookmarks);
         if (!bookmarkBtnExists) {
             const bookmarkBtn = document.createElement("img");
             bookmarkBtn.src = chrome.runtime.getURL("assets/bookmark.png");
             bookmarkBtn.id = "bookmark-btn";
             bookmarkBtn.title = "Click to bookmark current job";
-            console.log(document);
-            console.log(bookmarkBtn);
-            console.log(document.getElementById("ember29"));
-            console.log(document.querySelector('.jobs-unified-top-card'));
-            console.log(document.body.getElementsByClassName("jobs-unified-top-card__buttons-container")[0]);
-            console.log(document.body.getElementsByClassName("jobs-unified-top-card__job-title")[0]);
-            console.log(document.body.getElementsByClassName("display-flex justify-flex-end")[0]);
-            
+            jobToprightControls = document.getElementsByClassName("jobs-unified-top-card__buttons-container")[0];
+            console.log(jobToprightControls);
+            jobToprightControls.append(bookmarkBtn);
             bookmarkBtn.addEventListener("click", addNewBookmarkEventHandler);
         }
     }
-
-    newJobLoaded();
 
     const addNewBookmarkEventHandler = async () => {
         jobTitle = document.getElementsByClassName("jobs-unified-top-card__job-title")[0]?.textContent;

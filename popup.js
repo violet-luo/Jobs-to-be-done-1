@@ -6,7 +6,7 @@ const addNewBookmark = (bookmarksElement, bookmark) => {
     const newBookmarkElement = document.createElement("div");
     const controlsElement = document.createElement("div");
     
-    bookmarkTitleElement.textContent = bookmark.title;
+    bookmarkTitleElement.textContent = bookmark.company + "\n" + bookmark.title;
     bookmarkTitleElement.className = "bookmark-title";
 
     controlsElement.className = "bookmark-controls";
@@ -69,6 +69,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log(currentJob);
     if (activeTab.url.includes("linkedin.com/jobs/view/") && currentJob) {
         chrome.storage.sync.get([currentJob], (obj) => {
+            //obj.array.forEach(element => {
+            //    console(element);
+            //});
             const currentJobBookmarks = obj[currentJob]? JSON.parse(obj[currentJob]) : [];
             console.log(currentJobBookmarks);
             // viewBookmarks

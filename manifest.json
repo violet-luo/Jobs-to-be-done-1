@@ -1,43 +1,36 @@
 {
-    "name": "Jobs-to-be-done",
-    "version": "0.1.0",
-    "description": "Saving job applications in linkedin",
-    "content_security_policy": {
-      "extension_pages": "default-src 'self'"
-    },
-    "permissions": ["storage", "tabs"],
-    "host_permissions": ["https://*.linkedin.com/jobs/view/*"],
-    "background": {
-      "service_worker": "background.js"
-    },
-    "content_scripts": [
-      {
-        "matches": ["https://*.linkedin.com/jobs/view/*"],
-        "js": ["contentScript.js"]
-      }
-    ],
-    "web_accessible_resources": [
-      {
-        "resources": [
-          "assets/bookmark.png",
-          "assets/play.png",
-          "assets/delete.png",
-          "assets/save.png"
-        ],
-        "matches": ["http://*/*", "https://*/*"]
-      }
-    ],
-    "action": {
-      "default_icon": {
-        "16": "assets/ext-icon.png",
-        "24": "assets/ext-icon.png",
-        "32": "assets/ext-icon.png"
-      },
-      "default_title": "Jobs-to-be-done",
-      "default_popup": "popup.html"
-    },
-    "externally_connectable": {
-      "matches": ["*://*.linkedin.com/*"]
-    },
-    "manifest_version": 3
+  "name": "Jobs-to-be-done",
+  "version": "0.1.0",
+  "description": "Saving job applications in linkedin",
+  "permissions": ["storage", "tabs", "bookmarks"],
+  "host_permissions": ["https://www.linkedin.com/jobs/view/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/jobs/view/*"],
+      "js": ["contentScript.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/bookmark.png",
+        "assets/play.png",
+        "assets/delete.png",
+        "assets/save.png"
+      ],
+      "matches": ["http://*/*", "https://*/*"]
+    }
+  ],
+  "action": {
+    "default_icon": "assets/ext-icon.png",
+    "default_title": "Jobs-to-be-done",
+    "default_popup": "popup.html"
+  },
+  "externally_connectable": {
+    "matches": ["https://www.linkedin.com/*"]
+  },
+  "manifest_version": 3
 }
