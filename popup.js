@@ -68,14 +68,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const currentJob = activeTab.url.split("/")[5];
     console.log(currentJob);
     if (activeTab.url.includes("linkedin.com/jobs/view/") && currentJob) {
-        chrome.storage.sync.get([currentJob], (obj) => {
-            //obj.array.forEach(element => {
-            //    console(element);
-            //});
-            const currentJobBookmarks = obj[currentJob]? JSON.parse(obj[currentJob]) : [];
+        chrome.storage.sync.get().then((obj) => {
+            console.log(obj)
+            console.log(Object.values(obj));
+            const currentJobBookmarks = obj? Object.values(obj).map(x=>JSON.parse(x)[0]) : [];
             console.log(currentJobBookmarks);
             // viewBookmarks
             viewBookmarks(currentJobBookmarks);
+        }, (error) => {
+            console.log(`Error: ${error}`);
         });
     } else {
         const container = document.getElementById("container")[0];

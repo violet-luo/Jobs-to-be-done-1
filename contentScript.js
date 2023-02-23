@@ -11,10 +11,9 @@
             console.log(currentJob);
             newJobLoaded();
         } else if (type === "DELETE") {
-            currentJobBookmarks = currentJobBookmarks.filter((bookmark) => bookmark.id !== value);
-            chrome.storage.sync.set({ [currentJob]: JSON.stringify(currentJobBookmarks) });
+            chrome.storage.sync.remove(currentJob);
 
-            response(currentJobBookmarks);
+            response(currentJob);
         }
 
         //newJobLoaded();
@@ -22,19 +21,21 @@
 
     const fetchBookmarks = () => {
         return new Promise((resolve) => {
-            chrome.storage.sync.get([currentJob], (obj) => {
-                resolve(obj[currentJob]? JSON.parse(obj[currentJob]) : []);
+            chrome.storage.sync.get().then((obj) => {
+                resolve(obj? Object.values(obj).forEach((x)=>JSON.parse(x)) : []);
+            },(error) => {
+                console.log(`Error: ${error}`);
             });
         });
     }
 
     const newJobLoaded = async () => {
         console.log("new job loaded")
-        const bookmarkBtnExists = document.getElementById("bookmark-btn");
-        console.log(bookmarkBtnExists);
-        currentJobBookmarks = await fetchBookmarks();
-        console.log(currentJobBookmarks);
-        if (!bookmarkBtnExists) {
+        const bookmarkExists = chrome.storage.sync.get(currentJob);
+        console.log(bookmarkExists);
+        // currentJobBookmarks = await fetchBookmarks();
+        // console.log(currentJobBookmarks);
+        if (bookmarkExists === undefined) {
             const bookmarkBtn = document.createElement("img");
             bookmarkBtn.src = chrome.runtime.getURL("assets/bookmark.png");
             bookmarkBtn.id = "bookmark-btn";
@@ -61,11 +62,11 @@
         };
         console.log(newBookmark);
 
-        currentJobBookmarks = await fetchBookmarks();
-
         chrome.storage.sync.set({
-            [currentJob]: JSON.stringify([...currentJobBookmarks, newBookmark].sort((a, b) => a.time - b.time))
+            currentJob: JSON.stringify(newBookmark)
         });
+
+        currentJobBookmarks = await fetchBookmarks();
     }
 })();
 
