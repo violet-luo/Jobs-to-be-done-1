@@ -5,7 +5,7 @@ chrome.runtime.onMessageExternal.addListener( (request, sender, sendResponse) =>
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   //console.log(tabId, tab, tab.url);
-  if (tab.url && tab.url.includes("linkedin.com/jobs/view/")) {
+  if (tab.status === 'complete' && tab.url && tab.url.includes("linkedin.com/jobs/view/")) {
     const queryParameters = tab.url.split("/")[5];
     console.log(queryParameters);
     chrome.tabs.sendMessage(tabId, {

@@ -8,7 +8,6 @@
 
         if (type === "NEW") {
             currentJob = jobId;
-            console.log(currentJob);
             newJobLoaded();
         } else if (type === "DELETE") {
             chrome.storage.sync.remove(currentJob);
@@ -31,20 +30,20 @@
 
     const newJobLoaded = async () => {
         console.log("new job loaded")
-        const bookmarkExists = chrome.storage.sync.get(currentJob);
-        console.log(bookmarkExists);
-        // currentJobBookmarks = await fetchBookmarks();
-        // console.log(currentJobBookmarks);
-        if (bookmarkExists === undefined) {
+        console.log(currentJob)
+        const bookmarkBtnExists = document.getElementById("bookmark-btn");
+        jobToprightControls = document.getElementsByClassName("jobs-unified-top-card__buttons-container")[0];
+        currentJobBookmarks = await fetchBookmarks();
+        console.log(jobToprightControls)
+        console.log(bookmarkBtnExists)
+        if (jobToprightControls && !bookmarkBtnExists) {
             const bookmarkBtn = document.createElement("img");
             bookmarkBtn.src = chrome.runtime.getURL("assets/bookmark.png");
             bookmarkBtn.id = "bookmark-btn";
             bookmarkBtn.title = "Click to bookmark current job";
-            jobToprightControls = document.getElementsByClassName("jobs-unified-top-card__buttons-container")[0];
-            console.log(jobToprightControls);
             jobToprightControls.append(bookmarkBtn);
             bookmarkBtn.addEventListener("click", addNewBookmarkEventHandler);
-        }
+        } 
     }
 
     const addNewBookmarkEventHandler = async () => {
@@ -61,12 +60,16 @@
             location: location,
         };
         console.log(newBookmark);
-
-        chrome.storage.sync.set({
-            currentJob: JSON.stringify(newBookmark)
+        chrome.storage.sync.get([currentJob],(result)=>{
+            console.log(result)
+            if (result[currentJob] === undefined) {
+                chrome.storage.sync.set({
+                    currentJob: JSON.stringify(newBookmark)
+                });
+            } else {
+                console.log("bookmark exists");
+            }
         });
-
-        currentJobBookmarks = await fetchBookmarks();
     }
 })();
 
