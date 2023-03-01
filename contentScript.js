@@ -12,6 +12,10 @@
             currentJobBookmarks = currentJobBookmarks.filter((bookmark) => bookmark.id !== jobId);
             console.log(currentJobBookmarks)
             chrome.storage.sync.remove(jobId);
+            chrome.storage.sync.get(null, (obj) => {
+                const bookmarks = Object.keys(obj).map((key) => JSON.parse(obj[key]));
+                console.log(bookmarks)
+            });
             response(currentJobBookmarks);
         }
     });
@@ -32,14 +36,16 @@
         currentJobBookmarks = await fetchBookmarks();
         console.log(jobToprightControls)
         console.log(bookmarkBtnExists)
-        if (jobToprightControls && !bookmarkBtnExists) {
+        if (!bookmarkBtnExists && jobToprightControls) {
             const bookmarkBtn = document.createElement("img");
             bookmarkBtn.src = chrome.runtime.getURL("assets/bookmark.png");
             bookmarkBtn.id = "bookmark-btn";
             bookmarkBtn.title = "Click to bookmark current job";
             jobToprightControls.append(bookmarkBtn);
             bookmarkBtn.addEventListener("click", addNewBookmarkEventHandler);
-        } 
+        } else {
+            console.log("bookmark button already exists");
+        }
     }
 
     const addNewBookmarkEventHandler = async () => {

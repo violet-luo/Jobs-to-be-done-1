@@ -30,6 +30,7 @@ const addNewBookmark = (bookmarksElement, bookmark) => {
 const viewBookmarks = (currentBookmarks=[]) => {
     const bookmarksElement = document.getElementById("bookmarks");
     bookmarksElement.innerHTML = "";
+    console.log(currentBookmarks)
     if (currentBookmarks.length > 0) {
         for (let i = 0; i < currentBookmarks.length; i++) {
             const bookmark = currentBookmarks[i];
@@ -68,6 +69,7 @@ const setBookmarkAttributes =  (src, eventListener, controlParentElement) => {
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
+    console.log("DOMContentLoaded");
     activeTab = await getActiveTabURL();
     const currentJob = activeTab.url.split("/")[5];
     console.log(currentJob);
