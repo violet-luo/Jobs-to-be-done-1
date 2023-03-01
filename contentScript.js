@@ -4,33 +4,29 @@
     let currentJobBookmarks = [];
 
     chrome.runtime.onMessage.addListener((obj, sender, response) => {
-        const { type, value, jobId } = obj;
-
+        const { type, jobId } = obj;
         if (type === "NEW") {
             currentJob = jobId;
             newJobLoaded();
         } else if (type === "DELETE") {
-            chrome.storage.sync.remove(currentJob);
-
-            response(currentJob);
+            currentJobBookmarks = currentJobBookmarks.filter((bookmark) => bookmark.id !== jobId);
+            console.log(currentJobBookmarks)
+            chrome.storage.sync.remove(jobId);
+            response(currentJobBookmarks);
         }
-
-        //newJobLoaded();
     });
 
     const fetchBookmarks = () => {
         return new Promise((resolve) => {
-            chrome.storage.sync.get().then((obj) => {
-                resolve(obj? Object.values(obj).forEach((x)=>JSON.parse(x)) : []);
-            },(error) => {
-                console.log(`Error: ${error}`);
+            chrome.storage.sync.get(null, (obj) => {
+                const bookmarks = Object.keys(obj).map((key) => JSON.parse(obj[key]));
+                resolve(bookmarks);
             });
         });
     }
 
     const newJobLoaded = async () => {
         console.log("new job loaded")
-        console.log(currentJob)
         const bookmarkBtnExists = document.getElementById("bookmark-btn");
         jobToprightControls = document.getElementsByClassName("jobs-unified-top-card__buttons-container")[0];
         currentJobBookmarks = await fetchBookmarks();
@@ -49,22 +45,20 @@
     const addNewBookmarkEventHandler = async () => {
         jobTitle = document.getElementsByClassName("jobs-unified-top-card__job-title")[0]?.textContent;
         companyName = document.getElementsByClassName("jobs-unified-top-card__company-name")[0]?.textContent;
-        location = document.getElementsByClassName("jobs-unified-top-card__bullet")[0]?.textContent;
         
         const newBookmark = {
             time: getTime(),
             url: window.location.href,
             id: currentJob,
             title: jobTitle,
-            company: companyName,
-            location: location,
+            company: companyName
         };
         console.log(newBookmark);
-        chrome.storage.sync.get([currentJob],(result)=>{
+        chrome.storage.sync.get(newBookmark.id,(result)=>{
             console.log(result)
-            if (result[currentJob] === undefined) {
+            if (Object.keys(result).length === 0) {
                 chrome.storage.sync.set({
-                    currentJob: JSON.stringify(newBookmark)
+                    [newBookmark.id]: JSON.stringify(newBookmark)
                 });
             } else {
                 console.log("bookmark exists");

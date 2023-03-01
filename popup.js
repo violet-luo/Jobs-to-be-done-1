@@ -1,5 +1,7 @@
 import { getActiveTabURL } from "./utils.js";
 
+let activeTab;
+let currentJobBookmarks;
 // adding a new bookmark row to the popup
 const addNewBookmark = (bookmarksElement, bookmark) => {
     const bookmarkTitleElement = document.createElement("div");
@@ -48,10 +50,12 @@ const onDelete = e => {
     const bookmarkId = e.target.parentElement.parentElement.getAttribute("jobId");
     const bookmarkElementToDelete = document.getElementById("bookmark-"+bookmarkId);
     bookmarkElementToDelete.parentNode.removeChild(bookmarkElementToDelete);
-
+    console.log(bookmarkId)
+    console.log(typeof bookmarkId)
+    
     chrome.tabs.sendMessage(activeTab.id, { 
         type: "DELETE", 
-        value: bookmarkId 
+        jobId: bookmarkId
     }, viewBookmarks);
 };
 
@@ -64,14 +68,14 @@ const setBookmarkAttributes =  (src, eventListener, controlParentElement) => {
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const activeTab = await getActiveTabURL();
+    activeTab = await getActiveTabURL();
     const currentJob = activeTab.url.split("/")[5];
     console.log(currentJob);
     if (activeTab.url.includes("linkedin.com/jobs/view/") && currentJob) {
         chrome.storage.sync.get().then((obj) => {
             console.log(obj)
             console.log(Object.values(obj));
-            const currentJobBookmarks = obj? Object.values(obj).map(x=>JSON.parse(x)[0]) : [];
+            currentJobBookmarks = obj? Object.values(obj).map(x=>JSON.parse(x)) : [];
             console.log(currentJobBookmarks);
             // viewBookmarks
             viewBookmarks(currentJobBookmarks);
