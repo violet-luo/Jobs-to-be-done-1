@@ -5,11 +5,20 @@ let currentJobBookmarks;
 // adding a new bookmark row to the popup
 const addNewBookmark = (bookmarksElement, bookmark) => {
     const bookmarkTitleElement = document.createElement("div");
+    const bookmarkCompanyElement = document.createElement("div");
     const newBookmarkElement = document.createElement("div");
     const controlsElement = document.createElement("div");
+
+    const date = new Date(bookmark.time);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
     
-    bookmarkTitleElement.textContent = bookmark.company + "\n" + bookmark.title;
+    bookmarkTitleElement.textContent = bookmark.title;
     bookmarkTitleElement.className = "bookmark-title";
+    bookmarkCompanyElement.textContent = bookmark.company + "· \n" + formattedDate;
+    bookmarkCompanyElement.className = "bookmark-company";
 
     controlsElement.className = "bookmark-controls";
 
@@ -23,6 +32,8 @@ const addNewBookmark = (bookmarksElement, bookmark) => {
     setBookmarkAttributes("delete", onDelete, controlsElement);
 
     newBookmarkElement.appendChild(bookmarkTitleElement);
+    newBookmarkElement.appendChild(bookmarkCompanyElement);
+    newBookmarkElement.appendChild(bookmarkLocationElement);
     newBookmarkElement.appendChild(controlsElement);
     bookmarksElement.appendChild(newBookmarkElement);
 };

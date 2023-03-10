@@ -51,13 +51,13 @@
     const addNewBookmarkEventHandler = async () => {
         jobTitle = document.getElementsByClassName("jobs-unified-top-card__job-title")[0]?.textContent;
         companyName = document.getElementsByClassName("jobs-unified-top-card__company-name")[0]?.textContent;
-        
+
         const newBookmark = {
             time: getTime(),
             url: window.location.href,
             id: currentJob,
             title: jobTitle,
-            company: companyName
+            company: companyName,
         };
         console.log(newBookmark);
         chrome.storage.sync.get(newBookmark.id,(result)=>{
