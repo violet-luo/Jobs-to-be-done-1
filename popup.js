@@ -33,7 +33,6 @@ const addNewBookmark = (bookmarksElement, bookmark) => {
 
     newBookmarkElement.appendChild(bookmarkTitleElement);
     newBookmarkElement.appendChild(bookmarkCompanyElement);
-    newBookmarkElement.appendChild(bookmarkLocationElement);
     newBookmarkElement.appendChild(controlsElement);
     bookmarksElement.appendChild(newBookmarkElement);
 };

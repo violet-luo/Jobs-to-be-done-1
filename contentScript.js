@@ -57,7 +57,7 @@
             url: window.location.href,
             id: currentJob,
             title: jobTitle,
-            company: companyName,
+            company: companyName
         };
         console.log(newBookmark);
         chrome.storage.sync.get(newBookmark.id,(result)=>{
