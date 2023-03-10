@@ -3,31 +3,30 @@
   color: #314d3e;
 }
 
-.inspire-box {
+.inspire {
+  display: flex;
   width: 340px;
   height: 44px;
   background-color: F7F7F7;
+  font-size: 12px;
+  color: 737373;
   margin-left: 10px;
   margin-right: 10px;
-  text-align: center;
+  justify-content: center;
+  align-items: center;
   border: 1px solid #E5E5E5;
   border-radius: 6px;
 }
 
-.inspire-sentence {
+.app-num {
+  display: flex;
+  height: 30px;
+  margin-right: 12px;
+  align-items: center;
   font-size: 12px;
   color: 737373;
-}
-
-.app-summary {
-  width: 360px;
-}
-
-.num-of-app {
-  font-size: 12px;
-  color: 737373;
-  margin: 10px;
-  text-align: right;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .textbox {

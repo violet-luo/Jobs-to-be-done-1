@@ -2,6 +2,12 @@ import { getActiveTabURL } from "./utils.js";
 
 let activeTab;
 let currentJobBookmarks;
+
+// const applicationNumElement = document.createElement("div");
+// applicationNumElement.className = "app-num";
+// applicationNumElement.textContent = '2 Applications';
+// document.body.prepend(applicationNumElement);
+
 // adding a new bookmark row to the popup
 const addNewBookmark = (bookmarksElement, bookmark) => {
     const bookmarkTitleElement = document.createElement("div");
@@ -39,13 +45,23 @@ const addNewBookmark = (bookmarksElement, bookmark) => {
 
 const viewBookmarks = (currentBookmarks=[]) => {
     const bookmarksElement = document.getElementById("bookmarks");
+    const applicationNumElement = document.createElement("div");
+    const inspireElement = document.createElement("div");
     bookmarksElement.innerHTML = "";
+    applicationNumElement.className = "app-num";
+    inspireElement.className = "inspire";
     console.log(currentBookmarks)
     if (currentBookmarks.length > 0) {
         for (let i = 0; i < currentBookmarks.length; i++) {
             const bookmark = currentBookmarks[i];
             addNewBookmark(bookmarksElement, bookmark);
         } 
+
+        applicationNumElement.textContent = currentBookmarks.length + " Applications";
+        document.body.prepend(applicationNumElement);
+
+        inspireElement.textContent = "🙌🏻 Start your day by applying 5 jobs today - You can do it!";
+        document.body.prepend(inspireElement);
     } else {
         bookmarksElement.innerHTML = '<i class="row">No bookmarks yet.</i>';
     }
