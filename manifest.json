@@ -1,15 +1,15 @@
 {
   "name": "Jobs-to-be-done",
-  "version": "0.1.0",
+  "version": "1.0",
   "description": "Saving job applications in linkedin",
-  "permissions": ["storage", "tabs", "bookmarks"],
-  "host_permissions": ["https://www.linkedin.com/jobs/view/*"],
+  "permissions": ["background", "storage", "tabs", "bookmarks"],
+  "host_permissions": ["https://www.linkedin.com/jobs/view/*", "https://jobs.lever.co/*"],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "bg-wrapper.js"
   },
   "content_scripts": [
     {
-      "matches": ["https://www.linkedin.com/jobs/view/*"],
+      "matches": ["https://www.linkedin.com/jobs/view/*", "https://jobs.lever.co/*"],
       "js": ["contentScript.js"]
     }
   ],
@@ -21,7 +21,7 @@
         "assets/delete.png",
         "assets/save.png"
       ],
-      "matches": ["http://*/*", "https://*/*"]
+      "matches": ["https://*/*"]
     }
   ],
   "action": {
@@ -30,7 +30,7 @@
     "default_popup": "popup.html"
   },
   "externally_connectable": {
-    "matches": ["https://www.linkedin.com/*"]
+    "matches": ["https://www.linkedin.com/*", "https://jobs.lever.co/*"]
   },
   "manifest_version": 3
 }

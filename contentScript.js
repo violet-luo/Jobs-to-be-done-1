@@ -1,12 +1,15 @@
 (() => {
     let jobToprightControls;
     let currentJob = "";
+    let site = "";
     let currentJobBookmarks = [];
 
     chrome.runtime.onMessage.addListener((obj, sender, response) => {
-        const { type, jobId } = obj;
+        const { type, jobSite, jobId } = obj;
         if (type === "NEW") {
             currentJob = jobId;
+            site = jobSite;
+            console.log("new job loaded")
             newJobLoaded();
         } else if (type === "DELETE") {
             currentJobBookmarks = currentJobBookmarks.filter((bookmark) => bookmark.id !== jobId);
@@ -32,7 +35,11 @@
     const newJobLoaded = async () => {
         console.log("new job loaded")
         const bookmarkBtnExists = document.getElementById("bookmark-btn");
-        jobToprightControls = document.getElementsByClassName("jobs-unified-top-card__buttons-container")[0];
+        if (site === "linkedin") {
+            jobToprightControls = document.getElementsByClassName("jobs-unified-top-card__buttons-container")[0];
+        } else if (site === "lever") {
+            jobToprightControls = document.getElementsByClassName("postings-btn-wrapper")[0];
+        }
         currentJobBookmarks = await fetchBookmarks();
         console.log(jobToprightControls)
         console.log(bookmarkBtnExists)
@@ -49,11 +56,19 @@
     }
 
     const addNewBookmarkEventHandler = async () => {
-        jobTitle = document.getElementsByClassName("jobs-unified-top-card__job-title")[0]?.textContent;
-        companyName = document.getElementsByClassName("jobs-unified-top-card__company-name")[0]?.textContent;
+        jobTitle = "";
+        companyName = "";
+        if (site === "linkedin") {
+            jobTitle = document.getElementsByClassName("jobs-unified-top-card__job-title")[0]?.textContent;
+            companyName = document.getElementsByClassName("jobs-unified-top-card__company-name")[0]?.textContent;
+        } else if (site === "lever") {
+            jobTitle = document.getElementsByClassName("posting-headline")[0].innerText.split("\n")[0];
+            companyName = window.location.href.split("/")[3];
+        }
 
         const newBookmark = {
             time: getTime(),
+            site: site,
             url: window.location.href,
             id: currentJob,
             title: jobTitle,

@@ -33,6 +33,7 @@ const addNewBookmark = (bookmarksElement, bookmark) => {
     newBookmarkElement.setAttribute("timestamp", bookmark.time);
     newBookmarkElement.setAttribute("url", bookmark.url);
     newBookmarkElement.setAttribute("jobId", bookmark.id);
+    newBookmarkElement.setAttribute("site", bookmark.site);
 
     setBookmarkAttributes("go", onGo, controlsElement);
     setBookmarkAttributes("delete", onDelete, controlsElement);
@@ -75,6 +76,7 @@ const onGo = e => {
 
 const onDelete = e => {
     const bookmarkId = e.target.parentElement.parentElement.getAttribute("jobId");
+    const site = e.target.parentElement.parentElement.getAttribute("site");
     const bookmarkElementToDelete = document.getElementById("bookmark-"+bookmarkId);
     bookmarkElementToDelete.parentNode.removeChild(bookmarkElementToDelete);
     console.log(bookmarkId)
@@ -82,6 +84,7 @@ const onDelete = e => {
     
     chrome.tabs.sendMessage(activeTab.id, { 
         type: "DELETE", 
+        jobSite: site,
         jobId: bookmarkId
     }, viewBookmarks);
 };
@@ -97,9 +100,14 @@ const setBookmarkAttributes =  (src, eventListener, controlParentElement) => {
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("DOMContentLoaded");
     activeTab = await getActiveTabURL();
-    const currentJob = activeTab.url.split("/")[5];
+    var currentJob = null;
+    if (activeTab.url.includes("linkedin.com/jobs/view/")) {
+        currentJob = activeTab.url.split("/")[5];
+    } else if (activeTab.url.includes("jobs.lever.co/")) {
+        currentJob = activeTab.url.split("/")[4];
+    }
     console.log(currentJob);
-    if (activeTab.url.includes("linkedin.com/jobs/view/") && currentJob) {
+    if (currentJob) {
         chrome.storage.sync.get().then((obj) => {
             console.log(obj)
             console.log(Object.values(obj));
@@ -111,8 +119,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log(`Error: ${error}`);
         });
     } else {
-        const container = document.getElementById("container")[0];
-        container.innerHTML = '<div class="title">This is not a LinkedIn job viewing page.</div>';
+        const container = document.getElementsByClassName("container")[0];
+        container.innerHTML = '<div class="title">This is not a job site.</div>';
         //console.log("Not a job viewing page");
     }
 });
